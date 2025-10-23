@@ -1,3 +1,4 @@
+import cors from 'cors'; 
 import 'dotenv/config';
 import express from 'express';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
@@ -12,6 +13,10 @@ import projectRoutes from './routes/projectRoutes.js';
 import taskRoutes from './routes/task.routes.js';
 connectDB();
 const app = express();
+app.use(cors({
+  origin: process.env.FRONTEND_URL, // Use the URL Vercel gave you
+  credentials: true // Important for sessions/cookies if needed later, good practice
+}));
 app.use(express.json());
 // Session Middleware
 app.use(session({
