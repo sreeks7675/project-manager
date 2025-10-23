@@ -1,31 +1,24 @@
-// File: client/src/pages/ProjectDetailPage.jsx
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import apiClient from '../services/apiClient';
 import CreateTaskModal from '../components/CreateTaskModal';
-import TaskCard from '../components/TaskCard'; // <-- IMPORT REAL TASK CARD
-
-// Define the columns for our Kanban board
+import TaskCard from '../components/TaskCard'; 
 const TASK_COLUMNS = [
   'Pending Approval',
   'To Do',
   'In Progress',
   'Done',
 ];
-
 const ProjectDetailPage = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState({ root: [], subtasks: {} });
-  const [currentUser, setCurrentUser] = useState(null); // <-- NEW STATE
+  const [currentUser, setCurrentUser] = useState(null); 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
-
-  // Memoize tasks into columns for performance
   const taskColumns = useMemo(() => {
-    // ... (no changes needed here)
     const columns = {
         'Pending Approval': [],
         'To Do': [],
@@ -39,26 +32,21 @@ const ProjectDetailPage = () => {
       });
       return columns;
   }, [tasks.root]);
-
-  // Fetch all data for the page (Project, Tasks, CurrentUser)
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      // Fetch all three in parallel
       const [projectData, tasksData, userData] = await Promise.all([
         apiClient(`/api/projects/${projectId}`),
         apiClient(`/api/projects/${projectId}/tasks`),
         apiClient('/api/users/profile'),
       ]);
-
       if (projectData.unauthorized || tasksData.unauthorized || userData.unauthorized) {
         navigate('/login');
         return;
       }
-
       setProject(projectData);
       setTasks(tasksData);
-      setCurrentUser(userData); // <-- SAVE USER
+      setCurrentUser(userData); 
       setError(null);
     } catch (err) {
       console.error(err);
@@ -71,8 +59,6 @@ const ProjectDetailPage = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  // ... (loading, error, !project checks are the same)
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -80,7 +66,6 @@ const ProjectDetailPage = () => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -88,7 +73,6 @@ const ProjectDetailPage = () => {
       </div>
     );
   }
-
   if (!project) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -99,9 +83,7 @@ const ProjectDetailPage = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
       <header className="dashboard-header">
-         {/* ... (header is the same) */}
          <div>
           <Link to="/">
             <button className="button-secondary" style={{ marginRight: '1rem' }}>Back</button>
@@ -113,7 +95,6 @@ const ProjectDetailPage = () => {
           Add New Task
         </button>
       </header>
-
       {/* Kanban Board */}
       <div className="kanban-board">
         {TASK_COLUMNS.map((status) => (
@@ -125,11 +106,10 @@ const ProjectDetailPage = () => {
                   <TaskCard
                     key={task._id}
                     task={task}
-                    // Find subtasks for this specific task
                     subtasks={tasks.subtasks[task._id] || []}
-                    project={project} // Pass full project for team member info
-                    currentUser={currentUser} // Pass user for permission checks
-                    onRefresh={fetchData} // Pass refresh function
+                    project={project} 
+                    currentUser={currentUser} 
+                    onRefresh={fetchData} 
                   />
                 ))
               ) : (
@@ -141,7 +121,6 @@ const ProjectDetailPage = () => {
           </div>
         ))}
       </div>
-
       {/* Create Task Modal */}
       {showCreateTaskModal && (
         <CreateTaskModal
@@ -153,5 +132,4 @@ const ProjectDetailPage = () => {
     </div>
   );
 };
-
 export default ProjectDetailPage;

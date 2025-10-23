@@ -1,20 +1,13 @@
-// File: client/src/components/TaskCard.jsx
 import React, { useState } from 'react';
 import apiClient from '../services/apiClient';
 import CreateTaskModal from './CreateTaskModal';
-import EditTaskModal from './EditTaskModal'; // <-- IMPORT EDIT MODAL
-
+import EditTaskModal from './EditTaskModal';
 const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
   const [showSubtaskModal, setShowSubtaskModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // <-- STATE FOR EDIT MODAL
+  const [showEditModal, setShowEditModal] = useState(false);
   const isCreator = currentUser?._id === project?.projectCreator?._id;
   const isSubtask = !!task.parentId;
-  // Any team member can edit task details
   const isTeamMember = project?.teamMembers?.some(member => member._id === currentUser?._id) || isCreator;
-
-
-  // --- API Call Handlers ---
-  // ... (updateStatus, handleApprove, handleSetPriority, etc. remain the same)
   const updateStatus = async (action, assignees = null) => {
     if (isSubtask) {
         alert("Subtask status cannot be changed directly.");
@@ -55,7 +48,7 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
   };
   const handleStartTask = () => {
     if (isSubtask) return;
-    const assignees = [currentUser._id]; // Placeholder
+    const assignees = [currentUser._id]; 
     if (!assignees || assignees.length === 0) {
         alert("Cannot move to 'In Progress' without assignees.");
         return;
@@ -73,10 +66,7 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
       }
     }
   };
-
-  // --- Allowed Actions ---
   const allowedActions = () => {
-    // ... (logic remains the same)
     const actions = {
         canApprove: false,
         canSetPriority: false,
@@ -86,14 +76,12 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
         canMoveBackToInProgress: false,
         canDelete: false,
         canAddSubtask: !isSubtask,
-        canEdit: isTeamMember, // <-- ADD EDIT PERMISSION
+        canEdit: isTeamMember,
       };
-
       if (isCreator) {
         actions.canSetPriority = !isSubtask;
         actions.canDelete = true;
       }
-
       if (!isSubtask) {
         switch (task.status) {
           case 'Pending Approval':
@@ -114,9 +102,7 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
     }
     return actions;
   };
-
   const actions = allowedActions();
-
   return (
     <div className={`task-card ${isSubtask ? 'subtask-card' : ''}`}>
       <h4>{task.name}</h4>
@@ -137,14 +123,11 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
              </span>
          )}
       </div>
-
       {/* Action Buttons */}
       <div className="task-actions">
-        {/* --- ADD EDIT BUTTON --- */}
         {actions.canEdit && (
           <button onClick={() => setShowEditModal(true)} className="button-small button-secondary">Edit</button>
         )}
-        {/* ----------------------- */}
         {actions.canApprove && (
           <button onClick={handleApprove} className="button-small button-approve">Approve</button>
         )}
@@ -179,8 +162,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
           <button onClick={() => setShowSubtaskModal(true)} className="button-small button-secondary">Add Subtask</button>
         )}
       </div>
-
-      {/* Subtasks Display */}
       {subtasks.length > 0 && (
         <div className="subtasks-container">
           <h5>Subtasks:</h5>
@@ -196,8 +177,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
           ))}
         </div>
       )}
-
-      {/* Modal for Creating Subtasks */}
       {showSubtaskModal && (
         <CreateTaskModal
           projectId={project._id}
@@ -206,8 +185,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
           onTaskCreated={onRefresh}
         />
       )}
-
-      {/* --- RENDER EDIT MODAL --- */}
       {showEditModal && (
         <EditTaskModal
             task={task}
@@ -215,7 +192,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
             onTaskUpdated={onRefresh} // Refresh board after edit
         />
       )}
-      {/* ------------------------- */}
     </div>
   );
 };

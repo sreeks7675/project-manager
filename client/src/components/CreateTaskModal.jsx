@@ -1,7 +1,5 @@
-// File: client/src/components/CreateTaskModal.jsx
 import React, { useState } from 'react';
-import apiClient from '../services/apiClient'; // <-- NOW IT WORKS
-
+import apiClient from '../services/apiClient'; 
 const CreateTaskModal = ({
   projectId,
   parentId = null,
@@ -11,15 +9,12 @@ const CreateTaskModal = ({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const { toast } = useToast(); // We are not using this
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) {
       alert('Task name is required.');
       return;
     }
-
     setIsSubmitting(true);
     try {
       await apiClient(`/api/projects/${projectId}/tasks`, {
@@ -30,10 +25,9 @@ const CreateTaskModal = ({
           parentId,
         },
       });
-
       alert('New task created and sent for approval.');
-      onTaskCreated(); // This refreshes the task list
-      onClose(); // This closes the modal
+      onTaskCreated(); 
+      onClose(); 
     } catch (err) {
       console.error(err);
       alert(`Error Creating Task: ${err.message}`);
@@ -41,8 +35,6 @@ const CreateTaskModal = ({
       setIsSubmitting(false);
     }
   };
-
-  // This JSX now matches the style of your EditProjectModal
   return (
     <div className="modal-backdrop">
       <div className="modal-content">
@@ -80,5 +72,4 @@ const CreateTaskModal = ({
     </div>
   );
 };
-
 export default CreateTaskModal;

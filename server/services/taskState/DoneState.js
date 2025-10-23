@@ -1,9 +1,4 @@
 import { TaskState } from './TaskState.js';
-
-/**
- * Represents a task that has been completed.
- * Transitions: moveBackToInProgress -> 'In Progress'
- */
 export class DoneState extends TaskState {
   moveBackToInProgress(user) {
     // FR3.6: Any team member can move

@@ -1,6 +1,5 @@
 import Task from '../models/Task.js';
-import Project from '../models/Project.js'; // We need this for populating
-import { asyncHandler } from './asyncHandler.js';
+import Project from '../models/Project.js';
 /**
  * @desc Middleware to check if the user is a team member (or creator) of the project
  * that the task belongs to.

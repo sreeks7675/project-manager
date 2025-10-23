@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import apiClient from '../services/apiClient';
-
 const EditTaskModal = ({ task, onClose, onTaskUpdated }) => {
   const [name, setName] = useState(task.name);
-  const [description, setDescription] = useState(task.description || ''); // Handle potentially undefined description
+  const [description, setDescription] = useState(task.description || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) {
       alert('Task name is required.');
       return;
     }
-
     setIsSubmitting(true);
     try {
       await apiClient(`/api/tasks/${task._id}`, {
@@ -22,10 +19,9 @@ const EditTaskModal = ({ task, onClose, onTaskUpdated }) => {
           description: description.trim(),
         },
       });
-
       alert('Task updated successfully.');
-      onTaskUpdated(); // Refresh the board
-      onClose(); // Close the modal
+      onTaskUpdated(); 
+      onClose(); 
     } catch (err) {
       console.error('Error updating task:', err);
       alert(`Error updating task: ${err.message}`);
@@ -33,7 +29,6 @@ const EditTaskModal = ({ task, onClose, onTaskUpdated }) => {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="modal-backdrop">
       <div className="modal-content">
@@ -80,5 +75,4 @@ const EditTaskModal = ({ task, onClose, onTaskUpdated }) => {
     </div>
   );
 };
-
 export default EditTaskModal;

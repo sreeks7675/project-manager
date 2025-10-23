@@ -2,9 +2,8 @@ import { PendingApprovalState } from './PendingApproval.js';
 import { ToDoState } from './ToDoState.js';
 import { InProgressState } from './InProgressState.js';
 import { DoneState } from './DoneState.js';
-
 /**
- * A factory function that creates the appropriate state object
+ *factory function creates state object
  * based on the task's current status string.
  *
  * @param {Object} task - The Mongoose task document

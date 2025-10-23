@@ -1,37 +1,25 @@
-// File: client/src/components/EditProjectModal.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../services/apiClient'; // <-- Import our new client
-
-// This is the EditProjectModal, extracted from DashboardPage
+import apiClient from '../services/apiClient'; 
 const EditProjectModal = ({ project, onClose, onProjectUpdated }) => {
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description);
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Note: The original code used `body: JSON.stringify(...)`
-      // Our new client handles this if we pass a `data` object.
-      // But for consistency with your *original* code, I'll keep it as-is.
       const res = await apiClient(`/api/projects/${project._id}`, {
         method: 'PUT',
         body: JSON.stringify({ name, description }),
       });
-
       if (res.unauthorized) return navigate('/login');
-      // The new apiClient throws on non-OK status, so we don't need this check
-
-      onProjectUpdated(); // Tell the dashboard to refresh
-      onClose(); // Close the modal
+      onProjectUpdated(); 
+      onClose();
     } catch (err) {
       console.error(err);
-      alert('Error updating project'); // Keeping your original error alert
+      alert('Error updating project');
     }
   };
-
-  // This is your original HTML/CSS for the modal
   return (
     <div className="modal-backdrop">
       <div className="modal-content">
@@ -69,5 +57,4 @@ const EditProjectModal = ({ project, onClose, onProjectUpdated }) => {
     </div>
   );
 };
-
 export default EditProjectModal;
