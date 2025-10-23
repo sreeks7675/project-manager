@@ -13,10 +13,21 @@ import projectRoutes from './routes/projectRoutes.js';
 import taskRoutes from './routes/task.routes.js';
 connectDB();
 const app = express();
+// --- REPLACE YOUR CORS CONFIGURATION WITH THIS ---
+
+// Define the list of allowed origins
+const allowedOrigins = [
+  'http://localhost:5173', // Your local client
+  'https://project-manager-sand-xi.vercel.app' // Your deployed client
+];
+
+// Configure CORS
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // Use the URL Vercel gave you
-  credentials: true // Important for sessions/cookies if needed later, good practice
+  origin: allowedOrigins,
+  credentials: true, // This allows cookies/auth headers to be sent
 }));
+
+// --- END OF CORS CONFIGURATION ---
 app.use(express.json());
 // Session Middleware
 app.use(session({
