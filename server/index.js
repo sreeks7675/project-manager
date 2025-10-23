@@ -13,6 +13,7 @@ import projectRoutes from './routes/projectRoutes.js';
 import taskRoutes from './routes/task.routes.js';
 connectDB();
 const app = express();
+app.set('trust proxy', 1);
 // --- REPLACE YOUR CORS CONFIGURATION WITH THIS ---
 
 // Define the list of allowed origins
