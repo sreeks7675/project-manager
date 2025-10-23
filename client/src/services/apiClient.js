@@ -4,7 +4,6 @@
  * This function handles adding the auth token and error handling for all
  * our 'fetch' requests.
  */
-import { API_BASE_URL } from '../constants.js';
 /*const apiClient = async (url, options = {}) => {
   const token = localStorage.getItem('project-manager-token');
   const headers = {
