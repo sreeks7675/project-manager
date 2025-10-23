@@ -1,10 +1,11 @@
 import Task from '../models/Task.js';
 import Project from '../models/Project.js';
+import { asyncHandler } from './asyncHandler.js';
 /**
  * @desc Middleware to check if the user is a team member (or creator) of the project
  * that the task belongs to.
  */
-export const isTaskTeamMember = asyncHandler(async (req, res, next) => {
+export const isTaskTeamMember = asyncHandler(async(req, res, next) => {
   const { taskId } = req.params;
   const userId = req.user.id;
   const task = await Task.findById(taskId);
@@ -36,7 +37,7 @@ export const isTaskTeamMember = asyncHandler(async (req, res, next) => {
  * @desc Middleware to check if the user is the Project Creator of the project
  * that the task belongs to.
  */
-export const isTaskProjectCreator = asyncHandler(async (req, res, next) => {
+export const isTaskProjectCreator = asyncHandler(async(req, res, next) => {
   let project = req.project;
   if (!project) {
     const { taskId } = req.params;
