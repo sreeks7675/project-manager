@@ -5,13 +5,13 @@ import { notFound, errorHandler } from './middleware/errorHandler.js';
 import session from 'express-session';
 import passport from 'passport';
 import configurePassport from './config/passport.js';
-configurePassport(passport);
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import taskRoutes from './routes/task.routes.js';
 connectDB();
+configurePassport(passport);
 const app = express();
 app.set('trust proxy', 1);
 // --- REPLACE YOUR CORS CONFIGURATION WITH THIS ---
@@ -48,13 +48,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/projects',projectRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use(notFound);
+//error handler
+app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
-app.use(notFound);
-//error handler
-app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
