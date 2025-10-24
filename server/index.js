@@ -14,24 +14,21 @@ connectDB();
 configurePassport(passport);
 const app = express();
 app.set('trust proxy', 1);
-// --- REPLACE YOUR CORS CONFIGURATION WITH THIS ---
-
-// Define the list of allowed origins
 const allowedOrigins = [
-  'http://localhost:5173', // Your local client
-  'https://project-manager-sand-xi.vercel.app' // Your deployed client
+  'http://localhost:5173', 
+  'https://project-manager-sand-xi.vercel.app' 
 ];
 
 // Configure CORS
 app.use(cors({
   origin: allowedOrigins,
-  credentials: true, // This allows cookies/auth headers to be sent
+  credentials: true, 
 }));
 
 // --- END OF CORS CONFIGURATION ---
 app.use(express.json());
 // Session Middleware
-app.use(session({
+/*app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false, 
   saveUninitialized: false,
@@ -40,7 +37,27 @@ app.use(session({
       httpOnly: true, 
       sameSite: 'none', 
     },
-}));
+}));*/
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false, 
+
+    // This is the fix
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: 'sessions', 
+    }),
+
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'none', 
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    },
+  })
+);
 // Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session()); 
