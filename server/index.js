@@ -4,6 +4,7 @@ import express from 'express';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import session from 'express-session';
 import passport from 'passport';
+import MongoStore from 'connect-mongo';
 import configurePassport from './config/passport.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
